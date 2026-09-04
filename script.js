@@ -52,6 +52,30 @@ const countryList = document.getElementById("countryList");
 const countryInput = document.getElementById("countryInput");
 const countryHidden = document.getElementById("country");
 
+// Letters (incl. accented), spaces and hyphens only - no digits or other symbols.
+const NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]+$/;
+
+function validateNameField(inputEl, errorEl, label) {
+  const value = inputEl.value.trim();
+  let message = "";
+  if (!value) {
+    message = `${label} is required.`;
+  } else if (!NAME_REGEX.test(value)) {
+    message = `${label} must contain letters only (accents, spaces and hyphens are allowed).`;
+  }
+  inputEl.classList.toggle("invalid", !!message);
+  errorEl.textContent = message;
+  return !message;
+}
+
+const firstNameInput = document.getElementById("firstName");
+const lastNameInput = document.getElementById("lastName");
+const firstNameError = document.getElementById("firstNameError");
+const lastNameError = document.getElementById("lastNameError");
+
+firstNameInput.addEventListener("input", () => validateNameField(firstNameInput, firstNameError, "First Name"));
+lastNameInput.addEventListener("input", () => validateNameField(lastNameInput, lastNameError, "Last Name"));
+
 function countryOptionLabel(code, name) {
   return `${name} (${code})`;
 }
@@ -136,8 +160,18 @@ function generateMRZ() {
   const gender = document.getElementById("gender").value;
   const personalNumber = document.getElementById("personalNumber").value.trim().toUpperCase();
 
-  if (!firstName || !lastName || !dob || !passportNumber || !expiryDate || !country) {
+  const firstNameValid = validateNameField(firstNameInput, firstNameError, "First Name");
+  const lastNameValid = validateNameField(lastNameInput, lastNameError, "Last Name");
+  if (!firstNameValid || !lastNameValid) {
+    errorEl.textContent = "Please correct the highlighted fields.";
+    return;
+  }
+  if (!dob || !passportNumber || !expiryDate || !country) {
     errorEl.textContent = "Please fill in all required fields (*).";
+    return;
+  }
+  if (gender !== "M" && gender !== "F") {
+    errorEl.textContent = "Gender must be Male or Female.";
     return;
   }
   if (passportNumber.length < 8 || passportNumber.length > 9) {
@@ -248,6 +282,10 @@ function clearForm() {
   document.getElementById("personalNumber").value = "";
   document.getElementById("mrzOutput").value = "";
   document.getElementById("errorMsg").textContent = "";
+  firstNameInput.classList.remove("invalid");
+  lastNameInput.classList.remove("invalid");
+  firstNameError.textContent = "";
+  lastNameError.textContent = "";
 }
 
 document.getElementById("generateBtn").addEventListener("click", generateMRZ);

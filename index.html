@@ -12,6 +12,8 @@
     <button id="themeToggle" title="Toggle light/dark mode">Dark Mode</button>
   </div>
 
+  <p class="required-note"><span class="required-asterisk">*</span> Required fields</p>
+
   <div class="row">
     <label class="required">Document Type:</label>
     <input id="docType" maxlength="1" value="P">
@@ -22,11 +24,13 @@
     <label class="required">First Name:</label>
     <input id="firstName" value="JOHN">
   </div>
+  <div class="field-error" id="firstNameError"></div>
 
   <div class="row">
     <label class="required">Last Name:</label>
     <input id="lastName" value="SMITH">
   </div>
+  <div class="field-error" id="lastNameError"></div>
 
   <div class="row">
     <label class="required">Date of Birth:</label>
@@ -53,10 +57,9 @@
 
   <div class="row">
     <label class="required">Gender:</label>
-    <select id="gender">
+    <select id="gender" required>
       <option value="M">Male</option>
       <option value="F">Female</option>
-      <option value="X">Unspecified</option>
     </select>
   </div>
 

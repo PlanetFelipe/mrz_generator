@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MRZ Test Data Generator</title>
+<style>
+  @font-face {
+    font-family: "OCR-B";
+    src: url("OCRB Regular.ttf") format("truetype");
+  }
+  :root {
+    color-scheme: light;
+    --bg:#f0f0f0; --card-bg:#fff; --card-border:#ccc; --text:#222;
+    --input-border:#999; --input-bg:#fff; --hint:#555;
+    --btn-bg:#e8e8e8; --btn-hover:#dcdcdc; --btn-border:#888;
+    --primary-bg:#0a5cad; --primary-hover:#084d90;
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    --bg:#1a1a1a; --card-bg:#242424; --card-border:#3a3a3a; --text:#e8e8e8;
+    --input-border:#555; --input-bg:#2f2f2f; --hint:#aaa;
+    --btn-bg:#3a3a3a; --btn-hover:#484848; --btn-border:#5a5a5a;
+    --primary-bg:#2b7de9; --primary-hover:#1f63bf;
+  }
+  body { font-family: Segoe UI, Arial, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:24px; }
+  .card { max-width:760px; margin:0 auto; background:var(--card-bg); border:1px solid var(--card-border); border-radius:6px; padding:24px 32px; }
+  .card-header { display:flex; align-items:center; justify-content:space-between; }
+  h1 { font-size:22px; margin-top:0; }
+  .row { display:flex; align-items:center; margin-bottom:12px; gap:12px; }
+  .row label { width:170px; font-weight:600; font-size:13px; }
+  .row input, .row select { flex:0 0 220px; padding:6px 8px; font-size:14px; border:1px solid var(--input-border); border-radius:3px; background:var(--input-bg); color:var(--text); }
+  .hint { font-size:12px; color:var(--hint); flex:1; }
+  .buttons { margin:20px 0; display:flex; gap:10px; }
+  button { padding:8px 18px; font-size:14px; border:1px solid var(--btn-border); border-radius:4px; background:var(--btn-bg); color:var(--text); cursor:pointer; }
+  button:hover { background:var(--btn-hover); }
+  button.primary { background:var(--primary-bg); color:#fff; border-color:var(--primary-bg); }
+  button.primary:hover { background:var(--primary-hover); }
+  #themeToggle { padding:6px 12px; font-size:13px; }
+  textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; font-size:16px; letter-spacing:1px; box-sizing:border-box; padding:10px; border:1px solid var(--input-border); border-radius:4px; resize:vertical; white-space:pre; background:var(--input-bg); color:var(--text); }
+  .error { color:#e5484d; font-size:12px; margin-top:-6px; margin-bottom:10px; min-height:14px; }
+  .footer-btns { display:flex; gap:10px; margin-top:12px; }
+  .required::after { content:" *"; color:#e5484d; }
+  .print-only { display:none; }
+  @media print {
+    body { background:#fff; padding:0; }
+    .card { max-width:none; border:none; padding:0; }
+    .card-header, .row, .buttons, .footer-btns, .error, textarea { display:none; }
+    .print-only { display:block; white-space:pre-wrap; font-family:"OCR-B", Consolas, monospace; font-size:18px; letter-spacing:1px; color:#000; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>MRZ Test Data Generator</h1>
+    <button id="themeToggle" title="Toggle light/dark mode">Dark Mode</button>
+  </div>
+
+  <div class="row">
+    <label class="required">Document Type:</label>
+    <input id="docType" maxlength="1" value="P">
+    <span class="hint">P is the default document type, change only if required.</span>
+  </div>
+
+  <div class="row">
+    <label class="required">First Name:</label>
+    <input id="firstName" value="JOHN">
+  </div>
+
+  <div class="row">
+    <label class="required">Last Name:</label>
+    <input id="lastName" value="SMITH">
+  </div>
+
+  <div class="row">
+    <label class="required">Date of Birth:</label>
+    <input id="dob" type="date" value="1990-01-01">
+  </div>
+
+  <div class="row">
+    <label class="required">Passport Number:</label>
+    <input id="passportNumber" maxlength="9" value="AB123456">
+    <span class="hint">8 - 9 digits, including letters and numbers.</span>
+  </div>
+
+  <div class="row">
+    <label class="required">Passport Expiry Date:</label>
+    <input id="expiryDate" type="date" value="2030-01-01">
+  </div>
+
+  <div class="row">
+    <label class="required">Country:</label>
+    <select id="country"></select>
+  </div>
+
+  <div class="row">
+    <label class="required">Gender:</label>
+    <select id="gender">
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+      <option value="X">Unspecified</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Personal Number:</label>
+    <input id="personalNumber" maxlength="14">
+    <span class="hint">A personal identification number, not mandatory.</span>
+  </div>
+
+  <div class="error" id="errorMsg"></div>
+
+  <div class="buttons">
+    <button class="primary" id="generateBtn">Generate MRZ</button>
+    <button id="randomBtn">Randomize Data</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+
+  <textarea id="mrzOutput" placeholder="MRZ (TD3, 2 lines x 44 chars) will appear here..."></textarea>
+  <pre id="printArea" class="print-only"></pre>
+  <div class="footer-btns">
+    <button id="copyBtn">Copy to Clipboard</button>
+    <button id="printBtn">Print</button>
+  </div>
+</div>
+
+<script>
+// ICAO 9303 TD3 (passport) MRZ generator with check digits.
+
+const COUNTRIES = [
+  ["GBR","United Kingdom"],["USA","United States"],["CAN","Canada"],["AUS","Australia"],
+  ["FRA","France"],["DEU","Germany"],["ITA","Italy"],["ESP","Spain"],["PRT","Portugal"],
+  ["NLD","Netherlands"],["BEL","Belgium"],["IRL","Ireland"],["CHE","Switzerland"],
+  ["BRA","Brazil"],["IND","India"],["CHN","China"],["JPN","Japan"],["ZAF","South Africa"],
+  ["MEX","Mexico"],["NZL","New Zealand"]
+];
+
+const FIRST_NAMES = ["JOHN","JANE","MARIA","CARLOS","AHMED","LI","OLIVIA","LUCAS","EMMA","NOAH"];
+const LAST_NAMES  = ["SMITH","SILVA","GARCIA","MULLER","KHAN","WANG","BROWN","ROSSI","DUBOIS","TANAKA"];
+
+const countrySelect = document.getElementById("country");
+COUNTRIES.forEach(([code, name]) => {
+  const opt = document.createElement("option");
+  opt.value = code;
+  opt.textContent = `${name} (${code})`;
+  countrySelect.appendChild(opt);
+});
+
+function charValue(ch) {
+  if (ch === "<") return 0;
+  if (ch >= "0" && ch <= "9") return ch.charCodeAt(0) - 48;
+  if (ch >= "A" && ch <= "Z") return ch.charCodeAt(0) - 55; // A=10 ... Z=35
+  throw new Error(`Invalid MRZ character: ${ch}`);
+}
+
+function checkDigit(str) {
+  const weights = [7, 3, 1];
+  let sum = 0;
+  for (let i = 0; i < str.length; i++) {
+    sum += charValue(str[i]) * weights[i % 3];
+  }
+  return String(sum % 10);
+}
+
+// Keep only A-Z, 0-9; replace everything else (spaces, accents, punctuation) with "<".
+function sanitize(text) {
+  return text
+    .toUpperCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // strip accents
+    .replace(/[^A-Z0-9]/g, "<");
+}
+
+function padField(str, length) {
+  return (str + "<".repeat(length)).slice(0, length);
+}
+
+// Legacy app pads the doc-type field by repeating the entered value (e.g. "P" -> "PP") instead of using "<".
+function padDocType(str, length) {
+  const base = str || "P";
+  return base.repeat(Math.ceil(length / base.length)).slice(0, length);
+}
+
+function dateToYYMMDD(dateStr) {
+  const [y, m, d] = dateStr.split("-");
+  return y.slice(2) + m + d;
+}
+
+function buildNameField(lastName, firstName) {
+  // <<  separates surname from given names, single < separates multiple given names/surnames.
+  const raw = `${sanitize(lastName)}<<${sanitize(firstName)}`;
+  return padField(raw, 39);
+}
+
+function generateMRZ() {
+  const errorEl = document.getElementById("errorMsg");
+  errorEl.textContent = "";
+
+  const docType = document.getElementById("docType").value.trim().toUpperCase() || "P";
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const dob = document.getElementById("dob").value;
+  const passportNumber = document.getElementById("passportNumber").value.trim().toUpperCase();
+  const expiryDate = document.getElementById("expiryDate").value;
+  const country = document.getElementById("country").value;
+  const gender = document.getElementById("gender").value;
+  const personalNumber = document.getElementById("personalNumber").value.trim().toUpperCase();
+
+  if (!firstName || !lastName || !dob || !passportNumber || !expiryDate || !country) {
+    errorEl.textContent = "Please fill in all required fields (*).";
+    return;
+  }
+  if (passportNumber.length < 8 || passportNumber.length > 9) {
+    errorEl.textContent = "Passport Number must be 8 - 9 characters (letters and numbers).";
+    return;
+  }
+
+  try {
+    // Line 1: docType(2) + country(3) + name(39)
+    const docTypeField = padDocType(sanitize(docType), 2);
+    const countryField = padField(country, 3);
+    const nameField = buildNameField(lastName, firstName);
+    const line1 = docTypeField + countryField + nameField;
+
+    // Line 2: passportNo(9)+check(1) + nationality(3) + dob(6)+check(1) + sex(1) + expiry(6)+check(1) + personalNo(14)+check(1) + compositeCheck(1)
+    const passportField = padField(sanitize(passportNumber), 9);
+    const passportCheck = checkDigit(passportField);
+    const dobField = dateToYYMMDD(dob);
+    const dobCheck = checkDigit(dobField);
+    const sexField = (gender === "M" ? "M" : gender === "F" ? "F" : "<");
+    const expiryField = dateToYYMMDD(expiryDate);
+    const expiryCheck = checkDigit(expiryField);
+    const personalField = padField(sanitize(personalNumber), 14);
+    const personalCheck = checkDigit(personalField);
+
+    const compositeInput =
+      passportField + passportCheck +
+      dobField + dobCheck +
+      expiryField + expiryCheck +
+      personalField + personalCheck;
+    const compositeCheck = checkDigit(compositeInput);
+
+    const line2 =
+      passportField + passportCheck +
+      countryField +
+      dobField + dobCheck +
+      sexField +
+      expiryField + expiryCheck +
+      personalField + personalCheck +
+      compositeCheck;
+
+    if (line1.length !== 44 || line2.length !== 44) {
+      throw new Error("Internal error: generated line length is not 44 characters.");
+    }
+
+    const countryName = (COUNTRIES.find(([code]) => code === country) || [country, country])[1];
+    const summary = [
+      `First Name: ${firstName.toUpperCase()}`,
+      `Last Name: ${lastName.toUpperCase()}`,
+      `Passport Number: ${passportNumber}`,
+      `Date of Birth: ${dobField}`,
+      `Date of Expiry: ${expiryField}`,
+      `Gender: ${sexField}`,
+      `Country: ${countryName}`,
+      `Personal Number: ${personalNumber}`
+    ].join("\n");
+
+    document.getElementById("mrzOutput").value = `${summary}\n\n${line1}\n${line2}`;
+  } catch (e) {
+    errorEl.textContent = e.message;
+  }
+}
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function randomDate(startYear, endYear) {
+  const year = startYear + Math.floor(Math.random() * (endYear - startYear + 1));
+  const month = 1 + Math.floor(Math.random() * 12);
+  const day = 1 + Math.floor(Math.random() * 28);
+  return `${year}-${pad2(month)}-${pad2(day)}`;
+}
+
+function randomPassportNumber() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let s = "";
+  const len = 8 + Math.floor(Math.random() * 2); // 8 or 9
+  for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+function randomPersonalNumber() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let s = "";
+  for (let i = 0; i < 9; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+function randomize() {
+  document.getElementById("docType").value = "P";
+  document.getElementById("firstName").value = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+  document.getElementById("lastName").value = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+  document.getElementById("dob").value = randomDate(1950, 2005);
+  document.getElementById("passportNumber").value = randomPassportNumber();
+  document.getElementById("expiryDate").value = randomDate(2026, 2034);
+  document.getElementById("country").selectedIndex = Math.floor(Math.random() * COUNTRIES.length);
+  document.getElementById("gender").value = Math.random() < 0.5 ? "M" : "F";
+  document.getElementById("personalNumber").value = randomPersonalNumber();
+  document.getElementById("errorMsg").textContent = "";
+  generateMRZ();
+}
+
+function clearForm() {
+  document.getElementById("firstName").value = "";
+  document.getElementById("lastName").value = "";
+  document.getElementById("dob").value = "";
+  document.getElementById("passportNumber").value = "";
+  document.getElementById("expiryDate").value = "";
+  document.getElementById("personalNumber").value = "";
+  document.getElementById("mrzOutput").value = "";
+  document.getElementById("errorMsg").textContent = "";
+}
+
+document.getElementById("generateBtn").addEventListener("click", generateMRZ);
+document.getElementById("randomBtn").addEventListener("click", randomize);
+document.getElementById("clearBtn").addEventListener("click", clearForm);
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const out = document.getElementById("mrzOutput");
+  if (!out.value) return;
+  out.select();
+  navigator.clipboard.writeText(out.value).catch(() => document.execCommand("copy"));
+});
+document.getElementById("printBtn").addEventListener("click", () => {
+  const value = document.getElementById("mrzOutput").value;
+  if (!value) return;
+  document.getElementById("printArea").textContent = value;
+  window.print();
+});
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("themeToggle").textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
+  localStorage.setItem("mrzTheme", theme);
+}
+
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  applyTheme(current === "dark" ? "light" : "dark");
+});
+
+const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+applyTheme(localStorage.getItem("mrzTheme") || (prefersDark ? "dark" : "light"));
+</script>
+</body>
+</html>

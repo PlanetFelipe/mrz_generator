@@ -55,31 +55,24 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
  * PRINT SIZING LOGIC
  * -------------------
  * Passport data pages (ID-3, ICAO 9303) are physically 125mm x 88mm.
- * @page fixes the paper size for the print job itself, so the browser
- * does not need to scale/shrink our content to fit a default A4/Letter
- * sheet - the "page" IS the passport, at 1:1 real-world scale.
- * All dimensions inside .print-only are then set in mm (not %, vw, em or px),
- * so nothing depends on screen resolution/zoom and nothing gets rescaled.
- * (Some printers may not support this exact custom paper size and will fall
- * back to their default sheet - in that case the mm-sized box below is
- * still rendered at true 125mm x 88mm and centered on whatever paper is used,
- * it is just not the only thing on the page.)
+ * We print on a standard A4 sheet with a small 5mm margin (rather than a
+ * custom passport-sized @page) so the passport lands at the top-left of
+ * the page, ready to be cut out with scissors - no centring involved.
+ * All dimensions inside .print-only are set in mm (not %, vw, em or px),
+ * so the passport itself still renders at true 1:1 physical scale.
  */
 @page {
-  size: 125mm 88mm;
-  margin: 0;
+  size: A4 portrait;
+  margin: 5mm;
 }
 @media print {
   html, body {
     background:#fff !important;
     color:#000 !important;
     color-scheme: light !important;
-    margin:0; padding:0;
-    width:125mm; height:88mm;
-    overflow:hidden;
+    margin:0;
+    padding:0;
   }
-  /* Center the fixed-size passport box in case the printer ignores @page size. */
-  body { display:flex; align-items:center; justify-content:center; }
   .card-header, .row, .buttons, .footer-btns, .error, textarea { display:none; }
   .card { all:unset; display:block; }
   .site-footer { display:none; }
@@ -99,10 +92,6 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
     page-break-inside:avoid !important;
     break-inside:avoid !important;
     overflow:visible;
-    /* Small safety shrink (anchored top) so the MRZ zone can never be clipped by a
-       printer's unprintable margin; leaves a safe blank margin at the bottom instead. */
-    transform:scale(0.97);
-    transform-origin:top center;
     font-family:"OCR-B", Consolas, monospace;
     /* Base size (3mm) + ~1pt (1pt = 0.3528mm), decreased ~0.5pt from prior 3.5mm for
        closer-to-real-passport proportions; still leaves headroom within the 113mm

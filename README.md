@@ -1,6 +1,8 @@
 # MRZ Test Data Generator
 
-A small, self-contained web tool for generating **valid test MRZ (Machine Readable Zone)** data for passports, used for QA/testing purposes. No installation, build step, or server required — just open `index.html` in a browser.
+🔗 **Live tool:** [https://planetfelipe.github.io/mrz_generator/](https://planetfelipe.github.io/mrz_generator/)
+
+A small, self-contained web tool for generating **valid test MRZ (Machine Readable Zone)** data for passports, used for QA/testing purposes. No installation, build step, or server required — just open `index.html` in a browser, or use the live link above.
 
 Built as a lightweight replacement for an old native "Create Passports" desktop app, so testers can quickly generate MRZ test data on any machine/OS.
 

@@ -20,7 +20,7 @@ const COUNTRIES = [
   ["ISL","Iceland"],["IND","India"],["IDN","Indonesia"],["IRN","Iran"],["IRQ","Iraq"],
   ["IRL","Ireland"],["ISR","Israel"],["ITA","Italy"],["JAM","Jamaica"],["JPN","Japan"],
   ["JOR","Jordan"],["KAZ","Kazakhstan"],["KEN","Kenya"],["KIR","Kiribati"],["PRK","Korea (North)"],
-  ["KOR","Korea (South)"],["KWT","Kuwait"],["KGZ","Kyrgyzstan"],["LAO","Laos"],["LVA","Latvia"],
+  ["KOR","Korea (South)"],["XKX","Kosovo"],["KWT","Kuwait"],["KGZ","Kyrgyzstan"],["LAO","Laos"],["LVA","Latvia"],
   ["LBN","Lebanon"],["LSO","Lesotho"],["LBR","Liberia"],["LBY","Libya"],["LIE","Liechtenstein"],
   ["LTU","Lithuania"],["LUX","Luxembourg"],["MDG","Madagascar"],["MWI","Malawi"],["MYS","Malaysia"],
   ["MDV","Maldives"],["MLI","Mali"],["MLT","Malta"],["MHL","Marshall Islands"],["MRT","Mauritania"],

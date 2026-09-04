@@ -91,14 +91,18 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
     width:125mm;
     height:88mm;
     margin:0;
-    padding:5mm 6mm;
+    padding:4mm 6mm;
     border:0.3mm solid #000;
     background:#fff;
     color:#000;
     /* Keep the whole passport (details + MRZ) as one unbreakable unit on a single page. */
     page-break-inside:avoid !important;
     break-inside:avoid !important;
-    overflow:hidden;
+    overflow:visible;
+    /* Small safety shrink (anchored top) so the MRZ zone can never be clipped by a
+       printer's unprintable margin; leaves a safe blank margin at the bottom instead. */
+    transform:scale(0.97);
+    transform-origin:top center;
     font-family:"OCR-B", Consolas, monospace;
     /* Base size (3mm) + ~1pt (1pt = 0.3528mm), decreased ~0.5pt from prior 3.5mm for
        closer-to-real-passport proportions; still leaves headroom within the 113mm
@@ -126,7 +130,7 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
     display:flex;
     flex:0 0 auto;
     gap:5mm;
-    height:36mm;
+    height:32mm;
   }
   .print-only .p-photo {
     flex:0 0 26mm;

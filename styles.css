@@ -73,7 +73,7 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
     margin:0;
     padding:0;
   }
-  .card-header, .row, .buttons, .footer-btns, .error, textarea { display:none; }
+  .card-header, .row, .buttons, .footer-btns, .error, textarea, .required-note { display:none; }
   .card { all:unset; display:block; }
   .site-footer { display:none; }
   .print-only {

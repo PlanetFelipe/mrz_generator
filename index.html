@@ -135,7 +135,9 @@
 
   <div class="row">
     <label class="required">Country:</label>
-    <select id="country"></select>
+    <input id="countryInput" list="countryList" autocomplete="off" placeholder="Type to search...">
+    <datalist id="countryList"></datalist>
+    <input type="hidden" id="country">
   </div>
 
   <div class="row">
@@ -219,13 +221,35 @@ const COUNTRIES = [
 const FIRST_NAMES = ["JOHN","JANE","MARIA","CARLOS","AHMED","LI","OLIVIA","LUCAS","EMMA","NOAH"];
 const LAST_NAMES  = ["SMITH","SILVA","GARCIA","MULLER","KHAN","WANG","BROWN","ROSSI","DUBOIS","TANAKA"];
 
-const countrySelect = document.getElementById("country");
+// Country field is a searchable text input (datalist) backed by a hidden input holding the ISO code.
+const countryList = document.getElementById("countryList");
+const countryInput = document.getElementById("countryInput");
+const countryHidden = document.getElementById("country");
+
+function countryOptionLabel(code, name) {
+  return `${name} (${code})`;
+}
+
 COUNTRIES.forEach(([code, name]) => {
   const opt = document.createElement("option");
-  opt.value = code;
-  opt.textContent = `${name} (${code})`;
-  countrySelect.appendChild(opt);
+  opt.value = countryOptionLabel(code, name);
+  countryList.appendChild(opt);
 });
+
+function setCountry(code) {
+  const entry = COUNTRIES.find(([c]) => c === code);
+  if (!entry) return;
+  countryHidden.value = entry[0];
+  countryInput.value = countryOptionLabel(entry[0], entry[1]);
+}
+
+// Only accept exact matches from the list; otherwise clear the resolved code so validation catches typos.
+countryInput.addEventListener("input", () => {
+  const match = COUNTRIES.find(([code, name]) => countryOptionLabel(code, name) === countryInput.value);
+  countryHidden.value = match ? match[0] : "";
+});
+
+setCountry("GBR");
 
 function charValue(ch) {
   if (ch === "<") return 0;
@@ -382,7 +406,7 @@ function randomize() {
   document.getElementById("dob").value = randomDate(1950, 2005);
   document.getElementById("passportNumber").value = randomPassportNumber();
   document.getElementById("expiryDate").value = randomDate(2026, 2034);
-  document.getElementById("country").selectedIndex = Math.floor(Math.random() * COUNTRIES.length);
+  setCountry(COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)][0]);
   document.getElementById("gender").value = Math.random() < 0.5 ? "M" : "F";
   document.getElementById("personalNumber").value = randomPersonalNumber();
   document.getElementById("errorMsg").textContent = "";

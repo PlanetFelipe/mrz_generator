@@ -259,10 +259,65 @@ document.getElementById("copyBtn").addEventListener("click", () => {
   out.select();
   navigator.clipboard.writeText(out.value).catch(() => document.execCommand("copy"));
 });
+// Splits a TD3 name field (surname<<given<given...) into display-friendly parts.
+function parseNameField(field) {
+  const trimmed = field.replace(/<+$/, "");
+  const [surnamePart = "", givenPart = ""] = trimmed.split("<<");
+  return {
+    surname: surnamePart.replace(/</g, " ").trim(),
+    given: givenPart.replace(/</g, " ").trim()
+  };
+}
+
+// Expands an MRZ YYMMDD date into "DD MMM YYYY" for the printed data page.
+function formatMRZDate(yymmdd, isExpiry) {
+  const yy = Number(yymmdd.slice(0, 2));
+  const mm = yymmdd.slice(2, 4);
+  const dd = yymmdd.slice(4, 6);
+  const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const currentYY = new Date().getFullYear() % 100;
+  // Expiry dates are always in the future; birth dates use the standard MRZ rollover rule.
+  const century = isExpiry ? (yy < currentYY ? 2100 : 2000) : (yy > currentYY ? 1900 : 2000);
+  const monthName = months[Number(mm) - 1] || mm;
+  return `${dd} ${monthName} ${century + yy}`;
+}
+
 document.getElementById("printBtn").addEventListener("click", () => {
   const value = document.getElementById("mrzOutput").value;
   if (!value) return;
-  document.getElementById("printArea").textContent = value;
+
+  // Re-derive the printed data-page fields from the MRZ lines themselves (not the summary
+  // text), so manual edits made directly to the MRZ stay in sync with the visual fields
+  // and the exact MRZ characters the user typed are preserved verbatim.
+  const lines = value.split("\n").filter(l => l.trim().length > 0);
+  const [rawLine1, rawLine2] = lines.slice(-2);
+  const line1 = (rawLine1 || "").padEnd(44, "<").slice(0, 44);
+  const line2 = (rawLine2 || "").padEnd(44, "<").slice(0, 44);
+
+  const docType = line1.slice(0, 1);
+  const countryCode = line1.slice(2, 5).replace(/</g, "");
+  const { surname, given } = parseNameField(line1.slice(5, 44));
+
+  const passportNo = line2.slice(0, 9).replace(/</g, "");
+  const nationalityCode = line2.slice(10, 13).replace(/</g, "");
+  const dob = formatMRZDate(line2.slice(13, 19), false);
+  const sex = line2.slice(20, 21);
+  const expiry = formatMRZDate(line2.slice(21, 27), true);
+  const personalNo = line2.slice(28, 42).replace(/</g, "") || "-";
+  const countryName = (COUNTRIES.find(([code]) => code === nationalityCode) || [countryCode, countryCode])[1];
+
+  document.getElementById("pType").textContent = docType;
+  document.getElementById("pCode").textContent = countryCode;
+  document.getElementById("pDocNo").textContent = passportNo;
+  document.getElementById("pSurname").textContent = surname;
+  document.getElementById("pGiven").textContent = given;
+  document.getElementById("pNationality").textContent = countryName;
+  document.getElementById("pDob").textContent = dob;
+  document.getElementById("pSex").textContent = sex === "M" ? "M" : sex === "F" ? "F" : "X";
+  document.getElementById("pExpiry").textContent = expiry;
+  document.getElementById("pPersonal").textContent = personalNo;
+  document.getElementById("printMrz").textContent = `${rawLine1 || ""}\n${rawLine2 || ""}`;
+
   window.print();
 });
 

@@ -67,7 +67,9 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
   .card-header, .row, .buttons, .footer-btns, .error, textarea { display:none; }
   .card { all:unset; display:block; }
   .print-only {
-    display:block;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
     box-sizing:border-box;
     width:125mm;
     height:88mm;
@@ -82,10 +84,67 @@ textarea { width:100%; height:220px; font-family:"OCR-B", Consolas, monospace; f
        printable width for the 44-char MRZ lines. */
     font-size:3.32mm;
     line-height:1.4;
-    letter-spacing:0.25mm;
-    white-space:pre-wrap;
-    overflow:hidden;
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
+  }
+  /* Top strip: type / issuing-code / passport number, as on a real data page header. */
+  .print-only .p-header {
+    display:flex;
+    justify-content:space-between;
+    flex:0 0 auto;
+  }
+  .print-only .p-header .p-field { display:flex; flex-direction:column; }
+  .print-only .p-header .p-label {
+    font-size:1.8mm;
+    text-transform:uppercase;
+    color:#555;
+  }
+  .print-only .p-header span:last-child { font-size:2.8mm; }
+  /* Photo block + the vertically-distributed personal-detail fields. */
+  .print-only .p-body {
+    display:flex;
+    flex:0 0 auto;
+    gap:5mm;
+    height:36mm;
+  }
+  .print-only .p-photo {
+    flex:0 0 26mm;
+    box-sizing:border-box;
+    border:0.25mm solid #666;
+    background:#f2f2f2;
+    color:#888;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2.6mm;
+    letter-spacing:0.3mm;
+  }
+  .print-only .p-fields {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .print-only .p-fields .p-field {
+    display:flex;
+    align-items:baseline;
+    gap:2mm;
+  }
+  .print-only .p-fields .p-label {
+    flex:0 0 22mm;
+    font-size:1.8mm;
+    text-transform:uppercase;
+    color:#555;
+  }
+  .print-only .p-fields .p-field span:last-child { flex:1; font-size:2.6mm; }
+  /* MRZ zone pinned to the bottom edge; font-size/letter-spacing kept exactly as before. */
+  .print-only .p-mrz {
+    flex:0 0 auto;
+    margin:0;
+    font-family:"OCR-B", Consolas, monospace;
+    font-size:3.32mm;
+    letter-spacing:0.25mm;
+    white-space:pre;
+    overflow:hidden;
   }
 }

@@ -75,7 +75,26 @@
   </div>
 
   <textarea id="mrzOutput" placeholder="MRZ (TD3, 2 lines x 44 chars) will appear here..."></textarea>
-  <pre id="printArea" class="print-only"></pre>
+  <div id="printArea" class="print-only">
+    <div class="p-header">
+      <span class="p-field"><span class="p-label">Type</span><span id="pType"></span></span>
+      <span class="p-field"><span class="p-label">Code</span><span id="pCode"></span></span>
+      <span class="p-field"><span class="p-label">Passport No</span><span id="pDocNo"></span></span>
+    </div>
+    <div class="p-body">
+      <div class="p-photo">PHOTO</div>
+      <div class="p-fields">
+        <span class="p-field"><span class="p-label">Surname</span><span id="pSurname"></span></span>
+        <span class="p-field"><span class="p-label">Given Names</span><span id="pGiven"></span></span>
+        <span class="p-field"><span class="p-label">Nationality</span><span id="pNationality"></span></span>
+        <span class="p-field"><span class="p-label">Date of Birth</span><span id="pDob"></span></span>
+        <span class="p-field"><span class="p-label">Sex</span><span id="pSex"></span></span>
+        <span class="p-field"><span class="p-label">Date of Expiry</span><span id="pExpiry"></span></span>
+        <span class="p-field"><span class="p-label">Personal No</span><span id="pPersonal"></span></span>
+      </div>
+    </div>
+    <pre class="p-mrz" id="printMrz"></pre>
+  </div>
   <div class="footer-btns">
     <button id="copyBtn">Copy to Clipboard</button>
     <button id="printBtn">Print</button>

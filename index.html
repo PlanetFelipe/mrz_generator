@@ -83,9 +83,11 @@
       background:#fff;
       color:#000;
       font-family:"OCR-B", Consolas, monospace;
-      font-size:3mm;
+      /* Base size (3mm) + ~1.5pt (1pt = 0.3528mm) for closer-to-real-passport readability;
+         still leaves headroom within the 113mm printable width for the 44-char MRZ lines. */
+      font-size:3.5mm;
       line-height:1.4;
-      letter-spacing:0.2mm;
+      letter-spacing:0.25mm;
       white-space:pre-wrap;
       overflow:hidden;
       -webkit-print-color-adjust:exact;

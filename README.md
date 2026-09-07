@@ -1,8 +1,6 @@
 # MRZ Test Data Generator
 
-🔗 **Live tool:** [https://weareplanet.github.io/mrz_generator/](https://weareplanet.github.io/mrz_generator/)
-
-📦 **Repository:** [https://github.com/weareplanet/mrz_generator](https://github.com/weareplanet/mrz_generator)
+🔗 **Live tool:** [https://weareplanet.github.io/mrz_generator](https://weareplanet.github.io/mrz_generator)
 
 A small, self-contained web tool for generating **fictional test MRZ (Machine Readable Zone)** data for passports. It is intended for QA, automation and training purposes, allowing testers to quickly produce valid, well-formed passport test data without needing real or genuine identity documents.
 

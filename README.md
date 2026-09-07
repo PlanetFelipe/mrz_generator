@@ -2,17 +2,17 @@
 
 🔗 **Live tool:** [https://planetfelipe.github.io/mrz_generator/](https://planetfelipe.github.io/mrz_generator/)
 
-A small, self-contained web tool for generating **valid test MRZ (Machine Readable Zone)** data for passports, used for QA/testing purposes. No installation, build step, or server required — just open `index.html` in a browser, or use the live link above.
+A small, self-contained web tool for generating **fictional test MRZ (Machine Readable Zone)** data for passports. It is intended for QA, automation and training purposes, allowing testers to quickly produce valid, well-formed passport test data without needing real or genuine identity documents.
 
-Built as a lightweight replacement for an old native "Create Passports" desktop app, so testers can quickly generate MRZ test data on any machine/OS.
+No installation, build step, or server is required — just open `index.html` in a browser, or use the live link above.
 
 ## Background
 
-This web-based MRZ Test Data Generator was inspired by the original **Create Passports** desktop application created by **Janaina Dias** (Special thanks to her for the original implementation and inspiration behind this tool.), which has supported passport and MRZ testing activities within QA teams for many years.
+The original **Create Passports** desktop application was created by **Janaina Dias** and has supported passport and MRZ testing activities within QA teams for many years.
 
-The goal of this project was to modernise that concept by delivering an installation-free web version that can run on any modern browser while retaining the same purpose: generating fictional passport test data quickly and efficiently.
+This web version modernises that concept, providing a lightweight, browser-based implementation that requires no installation and runs on any modern operating system.
 
-Additional improvements introduced in this web version include:
+The web implementation, modernisation and enhancements were developed by **Felipe Silveira**, and include:
 
 - Browser-based access with no installation required.
 - Cross-platform support (Windows, macOS and Linux).
@@ -21,6 +21,11 @@ Additional improvements introduced in this web version include:
 - Light and dark mode support.
 - Real-size passport printing for scanner and kiosk testing scenarios.
 - Easy sharing via a single URL.
+
+## Acknowledgements
+
+- **Original Create Passports desktop application:** Janaina Dias
+- **Web implementation, modernisation and enhancements:** Felipe Silveira
 
 ## Features
 
@@ -69,4 +74,4 @@ Make sure `OCRB Regular.ttf` stays in the same folder as `index.html` (it's load
 
 ## Disclaimer
 
-This tool is for generating **fictional test data only** (QA/automation purposes). It does not validate against real-world passport issuance rules and must not be used to create documents resembling genuine identity credentials.
+This tool is intended for **testing and educational purposes only**. All generated identities, passport details and documents are **fictional**. It does not validate against real-world passport issuance rules and **must not be used to create genuine identity documents** or documents resembling genuine identity credentials.

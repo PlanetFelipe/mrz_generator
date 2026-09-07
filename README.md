@@ -8,7 +8,7 @@ Built as a lightweight replacement for an old native "Create Passports" desktop 
 
 ## Background
 
-This web-based MRZ Test Data Generator was inspired by the original **Create Passports** desktop application created by **Janaina Dias**, which has supported passport and MRZ testing activities within QA teams for many years.
+This web-based MRZ Test Data Generator was inspired by the original **Create Passports** desktop application created by **Janaina Dias** (Special thanks to her for the original implementation and inspiration behind this tool.), which has supported passport and MRZ testing activities within QA teams for many years.
 
 The goal of this project was to modernise that concept by delivering an installation-free web version that can run on any modern browser while retaining the same purpose: generating fictional passport test data quickly and efficiently.
 
@@ -21,8 +21,6 @@ Additional improvements introduced in this web version include:
 - Light and dark mode support.
 - Real-size passport printing for scanner and kiosk testing scenarios.
 - Easy sharing via a single URL.
-
-Special thanks to **Janaina Dias** for the original implementation and inspiration behind this tool.
 
 ## Features
 

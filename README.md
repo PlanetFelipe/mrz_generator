@@ -2,6 +2,8 @@
 
 🔗 **Live tool:** [https://planetfelipe.github.io/mrz_generator/](https://planetfelipe.github.io/mrz_generator/)
 
+📦 **Repository:** [https://github.com/weareplanet/mrz_generator](https://github.com/weareplanet/mrz_generator)
+
 A small, self-contained web tool for generating **fictional test MRZ (Machine Readable Zone)** data for passports. It is intended for QA, automation and training purposes, allowing testers to quickly produce valid, well-formed passport test data without needing real or genuine identity documents.
 
 No installation, build step, or server is required — just open `index.html` in a browser, or use the live link above.
@@ -65,7 +67,7 @@ The web implementation, modernisation and enhancements were developed by **Felip
 No build tools or dependencies needed:
 
 ```bash
-git clone https://github.com/PlanetFelipe/mrz_generator.git
+git clone https://github.com/weareplanet/mrz_generator.git
 cd mrz_generator
 # then just open index.html in your browser
 ```

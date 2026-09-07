@@ -6,6 +6,24 @@ A small, self-contained web tool for generating **valid test MRZ (Machine Readab
 
 Built as a lightweight replacement for an old native "Create Passports" desktop app, so testers can quickly generate MRZ test data on any machine/OS.
 
+## Background
+
+This web-based MRZ Test Data Generator was inspired by the original **Create Passports** desktop application created by **Janaina Dias**, which has supported passport and MRZ testing activities within QA teams for many years.
+
+The goal of this project was to modernise that concept by delivering an installation-free web version that can run on any modern browser while retaining the same purpose: generating fictional passport test data quickly and efficiently.
+
+Additional improvements introduced in this web version include:
+
+- Browser-based access with no installation required.
+- Cross-platform support (Windows, macOS and Linux).
+- Random test data generation.
+- Copy and print functionality.
+- Light and dark mode support.
+- Real-size passport printing for scanner and kiosk testing scenarios.
+- Easy sharing via a single URL.
+
+Special thanks to **Janaina Dias** for the original implementation and inspiration behind this tool.
+
 ## Features
 
 - Form fields matching a standard passport data entry screen: Document Type, First Name, Last Name, Date of Birth, Passport Number, Passport Expiry Date, Country, Gender, Personal Number.

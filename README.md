@@ -1,6 +1,6 @@
 # MRZ Test Data Generator
 
-🔗 **Live tool:** [https://weareplanet.github.io/mrz_generator/](https://weareplanet.github.io/mrz_generator/)
+🔗 **Live tool:** [https://weareplanet.github.io/mrz_generator](https://weareplanet.github.io/mrz_generator)
 
 📦 **Repository:** [https://github.com/weareplanet/mrz_generator](https://github.com/weareplanet/mrz_generator)
 
